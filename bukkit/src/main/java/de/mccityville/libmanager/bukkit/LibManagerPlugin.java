@@ -1,6 +1,7 @@
 package de.mccityville.libmanager.bukkit;
 
 import de.mccityville.libmanager.api.LibraryManager;
+import de.mccityville.libmanager.bukkit.config.Config;
 import de.mccityville.libmanager.bukkit.impl.BukkitLibraryManager;
 import de.mccityville.libmanager.util.RepositoryUtils;
 import de.mccityville.libmanager.util.ServiceLocatorFactory;
@@ -21,21 +22,28 @@ public class LibManagerPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        Config config = loadConfig();
         List<RemoteRepository> remoteRepositories = Collections.singletonList(RepositoryUtils.createCentral());
-        File localRepositoryFolder = createLocalRepositoryFolder();
-        LocalRepository localRepository = new LocalRepository(localRepositoryFolder);
+        LocalRepository localRepository = createLocalRepository(config);
         RepositorySystem repositorySystem = createRepositorySystem();
         BukkitLibraryManager libraryManager = new BukkitLibraryManager(repositorySystem, localRepository, () -> remoteRepositories, getLogger());
         Bukkit.getServicesManager().register(LibraryManager.class, libraryManager, this, ServicePriority.Normal);
     }
 
-    private File createLocalRepositoryFolder() {
-        File localRepositoryFolder = new File(getDataFolder(), "dependencies");
+    private Config loadConfig() {
+        saveDefaultConfig();
+        Config config = new Config();
+        config.load(getDataFolder(), getConfig());
+        return config;
+    }
+
+    private LocalRepository createLocalRepository(Config config) {
+        File localRepositoryFolder = config.getLocalRepositoryDirectory();
         if (localRepositoryFolder.mkdirs())
             getLogger().info("Created " + localRepositoryFolder.getPath() + " as local repository folder");
         else
             getLogger().info("Using " + localRepositoryFolder.getPath() + " as local repository folder");
-        return localRepositoryFolder;
+        return new LocalRepository(localRepositoryFolder);
     }
 
     private RepositorySystem createRepositorySystem() {

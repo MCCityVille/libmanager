@@ -1,0 +1,4 @@
+# The local_repository_directory directive specifies where the dependencies are saved. Relative parts are relative to
+# the plugins data directory
+# Default: dependencies
+local_repository_directory: dependencies

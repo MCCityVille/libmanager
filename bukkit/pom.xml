@@ -34,6 +34,7 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
+                    <include>config.yml</include>
                     <include>plugin.yml</include>
                 </includes>
             </resource>
