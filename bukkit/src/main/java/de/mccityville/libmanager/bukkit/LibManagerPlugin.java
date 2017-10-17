@@ -3,7 +3,6 @@ package de.mccityville.libmanager.bukkit;
 import de.mccityville.libmanager.api.LibraryManager;
 import de.mccityville.libmanager.bukkit.config.Config;
 import de.mccityville.libmanager.bukkit.impl.BukkitLibraryManager;
-import de.mccityville.libmanager.util.RepositoryUtils;
 import de.mccityville.libmanager.util.ServiceLocatorFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
@@ -14,7 +13,6 @@ import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.RemoteRepository;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -23,7 +21,7 @@ public class LibManagerPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         Config config = loadConfig();
-        List<RemoteRepository> remoteRepositories = Collections.singletonList(RepositoryUtils.createCentral());
+        List<RemoteRepository> remoteRepositories = config.getRepositories();
         LocalRepository localRepository = createLocalRepository(config);
         RepositorySystem repositorySystem = createRepositorySystem();
         BukkitLibraryManager libraryManager = new BukkitLibraryManager(repositorySystem, localRepository, () -> remoteRepositories, getLogger());
