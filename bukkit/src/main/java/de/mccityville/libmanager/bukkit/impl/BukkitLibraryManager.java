@@ -22,9 +22,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,6 +86,7 @@ public class BukkitLibraryManager implements LibraryManager {
             }
         }
 
+        private final Set<String> injected = new HashSet<>();
         private final URLClassLoader classLoader;
         private final Logger logger;
 
@@ -101,6 +104,9 @@ public class BukkitLibraryManager implements LibraryManager {
             }
 
             if ("pom".equalsIgnoreCase(event.getArtifact().getExtension()))
+                return;
+
+            if (!injected.add(event.getArtifact().toString()))
                 return;
 
             File file = event.getFile();
