@@ -24,7 +24,7 @@ public class LibManagerPlugin extends JavaPlugin {
         List<RemoteRepository> remoteRepositories = config.getRepositories();
         LocalRepository localRepository = createLocalRepository(config);
         RepositorySystem repositorySystem = createRepositorySystem();
-        BukkitLibraryManager libraryManager = new BukkitLibraryManager(repositorySystem, localRepository, () -> remoteRepositories, getLogger(), config.isDebug());
+        BukkitLibraryManager libraryManager = new BukkitLibraryManager(repositorySystem, localRepository, () -> remoteRepositories, getLogger());
         Bukkit.getServicesManager().register(LibraryManager.class, libraryManager, this, ServicePriority.Normal);
     }
 

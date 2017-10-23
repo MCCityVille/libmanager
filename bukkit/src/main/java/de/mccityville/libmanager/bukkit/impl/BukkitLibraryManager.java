@@ -3,14 +3,12 @@ package de.mccityville.libmanager.bukkit.impl;
 import de.mccityville.libmanager.api.LibraryManager;
 import de.mccityville.libmanager.api.LibraryResolver;
 import de.mccityville.libmanager.util.ClassLoaderLibraryResolver;
-import de.mccityville.libmanager.util.collection.DebuggingDependencySelector;
 import de.mccityville.libmanager.util.collection.DeepOptionalDependencySelector;
-import de.mccityville.libmanager.util.collection.ScopeExclusiveDependencySelector;
+import de.mccityville.libmanager.util.collection.CompileScopeDependencySelector;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.collection.DependencySelector;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.RemoteRepository;
@@ -35,18 +33,15 @@ public class BukkitLibraryManager implements LibraryManager {
     private final LocalRepository localRepository;
     private final Supplier<List<RemoteRepository>> remoteRepositorySupplier;
     private final Logger logger;
-    private final boolean debug;
 
     public BukkitLibraryManager(RepositorySystem repositorySystem,
                                 LocalRepository localRepository,
                                 Supplier<List<RemoteRepository>> remoteRepositorySupplier,
-                                Logger logger,
-                                boolean debug) {
+                                Logger logger) {
         this.repositorySystem = Objects.requireNonNull(repositorySystem, "repositorySystem must not be null");
         this.localRepository = Objects.requireNonNull(localRepository, "localRepository must not be null");
         this.remoteRepositorySupplier = Objects.requireNonNull(remoteRepositorySupplier, "remoteRepositorySupplier must not be null");
         this.logger = Objects.requireNonNull(logger, "logger must not be null");
-        this.debug = debug;
     }
 
     @Override
@@ -61,7 +56,8 @@ public class BukkitLibraryManager implements LibraryManager {
                 repositorySystem,
                 createSession(plugin),
                 remoteRepositorySupplier,
-                (URLClassLoader) classLoader
+                (URLClassLoader) classLoader,
+                plugin.getLogger()
         ));
     }
 
@@ -72,11 +68,11 @@ public class BukkitLibraryManager implements LibraryManager {
         DefaultRepositorySystemSession session = new DefaultRepositorySystemSession();
         session.setLocalRepositoryManager(createLocalRepositoryManager(session));
         session.setTransferListener(new LoggerTransferListener(logger));
-        DependencySelector dependencySelector = new AndDependencySelector(
+        session.setSystemProperties(System.getProperties());
+        session.setDependencySelector(new AndDependencySelector(
                 DeepOptionalDependencySelector.INSTANCE,
-                ScopeExclusiveDependencySelector.COMPILE_SCOPE_EXCLUSIVE_INSTANCE
-        );
-        session.setDependencySelector(debug ? new DebuggingDependencySelector(dependencySelector, plugin.getLogger()) : dependencySelector);
+                CompileScopeDependencySelector.INSTANCE
+        ));
         return session;
     }
 

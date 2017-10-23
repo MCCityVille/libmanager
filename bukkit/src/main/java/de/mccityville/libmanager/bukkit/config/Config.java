@@ -15,17 +15,8 @@ import java.util.Map;
 
 public class Config {
 
-    private boolean debug;
     private File localRepositoryDirectory;
     private List<RemoteRepository> repositories;
-
-    public boolean isDebug() {
-        return debug;
-    }
-
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
 
     public File getLocalRepositoryDirectory() {
         return localRepositoryDirectory;
@@ -44,8 +35,6 @@ public class Config {
     }
 
     public void load(File dataFolder, ConfigurationSection config) {
-        setDebug(config.getBoolean("debug"));
-
         Path localRepositoryDirectory = Paths.get(config.getString("local_repository_directory"));
         if (!localRepositoryDirectory.isAbsolute())
             localRepositoryDirectory = dataFolder.toPath().resolve(localRepositoryDirectory);

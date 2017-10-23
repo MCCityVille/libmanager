@@ -23,6 +23,7 @@ import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 public class ClassLoaderLibraryResolver implements LibraryResolver {
 
@@ -41,15 +42,18 @@ public class ClassLoaderLibraryResolver implements LibraryResolver {
     private final RepositorySystemSession repositorySystemSession;
     private final Supplier<List<RemoteRepository>> remoteRepositoriesSupplier;
     private final URLClassLoader targetClassLoader;
+    private final Logger logger;
 
     public ClassLoaderLibraryResolver(RepositorySystem repositorySystem,
                                       RepositorySystemSession repositorySystemSession,
                                       Supplier<List<RemoteRepository>> remoteRepositoriesSupplier,
-                                      URLClassLoader targetClassLoader) {
+                                      URLClassLoader targetClassLoader,
+                                      Logger logger) {
         this.repositorySystem = Objects.requireNonNull(repositorySystem, "repositorySystem must not be null");
         this.repositorySystemSession = Objects.requireNonNull(repositorySystemSession, "repositorySystemSession must not be null");
         this.remoteRepositoriesSupplier = Objects.requireNonNull(remoteRepositoriesSupplier, "remoteRepositoriesSupplier must not be null");
         this.targetClassLoader = Objects.requireNonNull(targetClassLoader, "targetClassLoader must not be null");
+        this.logger = Objects.requireNonNull(logger, "logger must not be null");
     }
 
     @Override
@@ -64,19 +68,18 @@ public class ClassLoaderLibraryResolver implements LibraryResolver {
     }
 
     private void inject(ArtifactResult artifactResult) throws DependencyProvisionException {
-        if (artifactResult.isResolved()) {
-            File file = artifactResult.getArtifact().getFile();
-            URL url;
-            try {
-                url = file.toURI().toURL();
-            } catch (MalformedURLException e) {
-                throw new DependencyProvisionException("Cannot obtain url from artifact file", e);
-            }
-            try {
-                ADD_URL_METHOD.invoke(targetClassLoader, url);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new DependencyProvisionException("Cannot inject url into URLClassLoader", e);
-            }
+        File file = artifactResult.getArtifact().getFile();
+        URL url;
+        try {
+            url = file.toURI().toURL();
+        } catch (MalformedURLException e) {
+            throw new DependencyProvisionException("Cannot obtain url from artifact file", e);
+        }
+        logger.info("Injecting " + url + " into class loader...");
+        try {
+            ADD_URL_METHOD.invoke(targetClassLoader, url);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new DependencyProvisionException("Cannot inject url into URLClassLoader", e);
         }
     }
 }
