@@ -7,13 +7,13 @@ import org.eclipse.aether.resolution.DependencyResolutionException;
 
 public interface LibraryResolver {
 
-    default void load(String coordinates) throws DependencyResolutionException {
+    default void load(String coordinates) throws DependencyResolutionException, DependencyProvisionException {
         load(new DefaultArtifact(coordinates));
     }
 
-    default void load(Artifact artifact) throws DependencyResolutionException {
+    default void load(Artifact artifact) throws DependencyResolutionException, DependencyProvisionException {
         load(new Dependency(artifact, null));
     }
 
-    void load(Dependency dependency) throws DependencyResolutionException;
+    void load(Dependency dependency) throws DependencyResolutionException, DependencyProvisionException;
 }

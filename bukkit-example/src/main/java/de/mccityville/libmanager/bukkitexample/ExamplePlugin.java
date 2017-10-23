@@ -1,5 +1,6 @@
 package de.mccityville.libmanager.bukkitexample;
 
+import de.mccityville.libmanager.api.DependencyProvisionException;
 import de.mccityville.libmanager.api.LibraryManager;
 import de.mccityville.libmanager.api.LibraryResolver;
 import org.bukkit.Bukkit;
@@ -15,7 +16,7 @@ public class ExamplePlugin extends JavaPlugin {
         LibraryResolver libraryResolver = Bukkit.getServicesManager().load(LibraryManager.class).getLibraryResolver(this);
         try {
             libraryResolver.load("org.eclipse.collections:eclipse-collections:9.0.0");
-        } catch (DependencyResolutionException e) {
+        } catch (DependencyResolutionException | DependencyProvisionException e) {
             getLogger().log(Level.SEVERE, "Exception occurred while resolving dependencies", e);
             Bukkit.getPluginManager().disablePlugin(this);
             return;
