@@ -1,3 +1,7 @@
+# Set this to true to gain more precise information about dependency resolve and dependency graph building.
+# Default: false
+debug: false
+
 # The local_repository_directory directive specifies where the dependencies are saved. Relative parts are relative to
 # the plugins data directory
 # Default: dependencies
