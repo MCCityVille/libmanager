@@ -3,6 +3,7 @@ package de.mccityville.libmanager.bukkit.config;
 import org.bukkit.configuration.ConfigurationSection;
 import org.eclipse.aether.repository.Authentication;
 import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.repository.RepositoryPolicy;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 
 import java.io.File;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Config {
+
+    private static final RepositoryPolicy DEFAULT_POLICY = new RepositoryPolicy();
 
     private File localRepositoryDirectory;
     private List<RemoteRepository> repositories;
@@ -57,16 +60,33 @@ public class Config {
         RemoteRepository.Builder builder = new RemoteRepository.Builder(id, "default", url);
 
         ConfigurationSection authConfig = config.getConfigurationSection("authentication");
-        if (authConfig != null) {
-            String username = authConfig.getString("username");
-            String password = authConfig.getString("password");
-            Authentication authentication = new AuthenticationBuilder()
-                    .addUsername(username)
-                    .addPassword(password)
-                    .build();
-            builder = builder.setAuthentication(authentication);
-        }
+        if (authConfig != null)
+            builder = builder.setAuthentication(readAuthentication(authConfig));
+
+        ConfigurationSection releasePolicyConfig = config.getConfigurationSection("release_policy");
+        if (releasePolicyConfig != null)
+            builder = builder.setReleasePolicy(readRepositoryPolicy(releasePolicyConfig));
+
+        ConfigurationSection snapshotPolicyConfig = config.getConfigurationSection("snapshot_policy");
+        if (snapshotPolicyConfig != null)
+            builder = builder.setSnapshotPolicy(readRepositoryPolicy(snapshotPolicyConfig));
 
         return builder.build();
+    }
+
+    private static Authentication readAuthentication(ConfigurationSection config) {
+        String username = config.getString("username");
+        String password = config.getString("password");
+        return new AuthenticationBuilder()
+                .addUsername(username)
+                .addPassword(password)
+                .build();
+    }
+
+    private static RepositoryPolicy readRepositoryPolicy(ConfigurationSection config) {
+        boolean enabled = config.getBoolean("enabled", true);
+        String updatePolicy = config.getString("update", DEFAULT_POLICY.getUpdatePolicy());
+        String checksumPolicy = config.getString("checksum", DEFAULT_POLICY.getChecksumPolicy());
+        return new RepositoryPolicy(enabled, updatePolicy, checksumPolicy);
     }
 }
