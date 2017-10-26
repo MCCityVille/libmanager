@@ -97,14 +97,5 @@ public class BukkitLibraryManager implements LibraryManager {
         public void transferSucceeded(TransferEvent event) {
             logger.info(event.getResource() + " was transferred successfully");
         }
-
-        @Override
-        public void transferFailed(TransferEvent event) {
-            Exception exception = event.getException();
-            if (exception == null)
-                logger.severe(event.getResource() + " was not transferred normally");
-            else
-                logger.log(Level.SEVERE, event.getResource() + " was not transferred normally", exception);
-        }
     }
 }
