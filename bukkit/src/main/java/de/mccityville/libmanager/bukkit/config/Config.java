@@ -1,5 +1,6 @@
 package de.mccityville.libmanager.bukkit.config;
 
+import de.mccityville.libmanager.util.config.BaseConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.eclipse.aether.repository.Authentication;
 import org.eclipse.aether.repository.RemoteRepository;
@@ -14,28 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class Config {
-
-    private static final RepositoryPolicy DEFAULT_POLICY = new RepositoryPolicy();
-
-    private File localRepositoryDirectory;
-    private List<RemoteRepository> repositories;
-
-    public File getLocalRepositoryDirectory() {
-        return localRepositoryDirectory;
-    }
-
-    public void setLocalRepositoryDirectory(File localRepositoryDirectory) {
-        this.localRepositoryDirectory = localRepositoryDirectory;
-    }
-
-    public List<RemoteRepository> getRepositories() {
-        return repositories;
-    }
-
-    public void setRepositories(List<RemoteRepository> repositories) {
-        this.repositories = repositories;
-    }
+public class Config extends BaseConfig {
 
     public void load(File dataFolder, ConfigurationSection config) {
         Path localRepositoryDirectory = Paths.get(config.getString("local_repository_directory"));
