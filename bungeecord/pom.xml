@@ -79,6 +79,7 @@
                                     <include>org.codehaus.plexus:plexus-utils</include>
                                     <include>org.slf4j:slf4j-api</include>
                                     <include>org.slf4j:jcl-over-slf4j</include>
+                                    <include>org.apache.commons:commons-lang3</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
