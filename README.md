@@ -3,7 +3,7 @@
 LibManager is a helper plugin (currently only for Bukkit) for downloading and injecting dependencies from an Apache
 Maven repository. This allows to use dependent libraries without the need of shading them into your plugins jar file.
 
-## Example
+## Example (Bukkit)
 
 You can find a simple example plugin in the `bukkit-example` folder. This plugin will require the
 `org.eclipse.collections:eclipse-collections:9.0.0` dependency which will gets downloaded by LibManager. Additionally
