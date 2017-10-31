@@ -14,8 +14,7 @@ public class LoggerServiceLocatorErrorHandler extends DefaultServiceLocator.Erro
     }
 
     @Override
-    public void serviceCreationFailed(Class<?> type, Class<?> impl, Throwable exception )
-    {
-        logger.log(Level.SEVERE, "Failed to create service fo type " + type.getName() + " with implementation ");
+    public void serviceCreationFailed(Class<?> type, Class<?> impl, Throwable exception) {
+        logger.log(Level.SEVERE, "Failed to create service fo type " + type.getName() + " with implementation " + impl.getName(), exception);
     }
 }
