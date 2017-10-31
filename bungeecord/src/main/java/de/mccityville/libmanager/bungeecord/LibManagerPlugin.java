@@ -51,6 +51,8 @@ public class LibManagerPlugin extends Plugin implements LibraryManager {
 
     private Config loadConfig() {
         File dataFolder = getDataFolder();
+        if (dataFolder.mkdirs())
+            getLogger().info("Data directory created");
         File configFile = new File(dataFolder, "config.yml");
         if (!configFile.exists()) {
             try {
