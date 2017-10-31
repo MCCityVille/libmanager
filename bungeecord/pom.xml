@@ -35,8 +35,8 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
+                    <include>bungee.yml</include>
                     <include>config.yml</include>
-                    <include>plugin.yml</include>
                 </includes>
             </resource>
         </resources>
