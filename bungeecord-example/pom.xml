@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>bungeecord-example</artifactId>
+    <artifactId>libmanager-bungeecord-example</artifactId>
 
     <dependencies>
         <dependency>
