@@ -1,6 +1,7 @@
 package de.mccityville.libmanager.bukkit;
 
 import de.mccityville.libmanager.api.LibraryManager;
+import de.mccityville.libmanager.api.LibraryResolver;
 import de.mccityville.libmanager.bukkit.config.Config;
 import de.mccityville.libmanager.bukkit.impl.BukkitLibraryManager;
 import de.mccityville.libmanager.util.LoggerServiceLocatorErrorHandler;
@@ -15,9 +16,21 @@ import org.eclipse.aether.repository.RemoteRepository;
 
 import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
 
-public class LibManagerPlugin extends JavaPlugin {
+public class LibManagerPlugin extends JavaPlugin implements LibraryManager {
+
+    private BukkitLibraryManager libraryManager;
+
+    public BukkitLibraryManager getLibraryManager() {
+        if (libraryManager == null)
+            throw new IllegalStateException("Not initialized");
+        return libraryManager;
+    }
+
+    @Override
+    public LibraryResolver getLibraryResolver(Object realm) {
+        return getLibraryManager().getLibraryResolver(realm);
+    }
 
     @Override
     public void onLoad() {
@@ -25,7 +38,7 @@ public class LibManagerPlugin extends JavaPlugin {
         List<RemoteRepository> remoteRepositories = config.getRepositories();
         LocalRepository localRepository = createLocalRepository(config);
         RepositorySystem repositorySystem = createRepositorySystem();
-        BukkitLibraryManager libraryManager = new BukkitLibraryManager(repositorySystem, localRepository, () -> remoteRepositories, getLogger());
+        libraryManager = new BukkitLibraryManager(repositorySystem, localRepository, () -> remoteRepositories, getLogger());
         Bukkit.getServicesManager().register(LibraryManager.class, libraryManager, this, ServicePriority.Normal);
     }
 
