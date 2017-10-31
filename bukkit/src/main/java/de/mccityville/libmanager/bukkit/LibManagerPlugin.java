@@ -3,6 +3,7 @@ package de.mccityville.libmanager.bukkit;
 import de.mccityville.libmanager.api.LibraryManager;
 import de.mccityville.libmanager.bukkit.config.Config;
 import de.mccityville.libmanager.bukkit.impl.BukkitLibraryManager;
+import de.mccityville.libmanager.util.LoggerServiceLocatorErrorHandler;
 import de.mccityville.libmanager.util.ServiceLocatorFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
@@ -47,13 +48,7 @@ public class LibManagerPlugin extends JavaPlugin {
     private RepositorySystem createRepositorySystem() {
         getLogger().info("Creating repository system...");
         DefaultServiceLocator locator = ServiceLocatorFactory.createDefault();
-        locator.setErrorHandler(new DefaultServiceLocator.ErrorHandler() {
-            @Override
-            public void serviceCreationFailed(Class<?> type, Class<?> impl, Throwable exception )
-            {
-                getLogger().log(Level.SEVERE, "Failed to create service fo type " + type.getName() + " with implementation ");
-            }
-        });
+        locator.setErrorHandler(new LoggerServiceLocatorErrorHandler(getLogger()));
         RepositorySystem repositorySystem = locator.getService(RepositorySystem.class);
         getLogger().info("Repository system created");
         return repositorySystem;

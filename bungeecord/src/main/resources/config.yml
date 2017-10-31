@@ -1,0 +1,10 @@
+# The local_repository_directory directive specifies where the dependencies are saved. Relative parts are relative to
+# the plugins data directory
+# Default: dependencies
+local_repository_directory: dependencies
+
+# The repository directive can be used to configure remote repositories from which dependencies will be loaded.
+# Default: Maven Central (key: central, url: https://repo.maven.apache.org/maven2/)
+repositories:
+  central:
+    url: https://repo.maven.apache.org/maven2/
