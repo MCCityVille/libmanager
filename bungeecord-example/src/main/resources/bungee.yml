@@ -1,0 +1,4 @@
+name: MCCV-LibManager-Example
+version: ${project.version}
+main: de.mccityville.libmanager.bungeecordexample.ExamplePlugin
+depends: [ MCCV-LibManager ]

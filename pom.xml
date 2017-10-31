@@ -15,6 +15,7 @@
         <module>bukkit</module>
         <module>bukkit-example</module>
         <module>bungeecord</module>
+        <module>bungeecord-example</module>
     </modules>
 
     <properties>
