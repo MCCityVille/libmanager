@@ -1,5 +1,7 @@
 # LibManager
 
+[![Build Status](https://travis-ci.org/MCCityVille/libmanager.svg?branch=master)](https://travis-ci.org/MCCityVille/libmanager)
+
 LibManager is a helper plugin (currently only for Bukkit) for downloading and injecting dependencies from an Apache
 Maven repository. This allows to use dependent libraries without the need of shading them into your plugins jar file.
 
